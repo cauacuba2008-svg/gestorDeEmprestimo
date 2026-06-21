@@ -18,6 +18,38 @@ Depois formatamos os dados capturados usando o método com a seguinte ordem:
 '''
 
 from datetime import datetime
+import json
+import os
+
+# Nome do arquivo onde a lista produtos fica salva no disco, fora da memória do programa.
+ARQUIVO_PRODUTOS = "produtos.json"
+
+'''
+Função salvar_produtos grava a lista produtos inteira no arquivo ARQUIVO_PRODUTOS, em formato JSON.
+ 
+- "w" abre o arquivo em modo escrita, criando-o se não existir e sobrescrevendo se já existir.
+- encoding="utf-8" garante que acentos e caracteres especiais (ã, ç, é) sejam salvos corretamente.
+- json.dump() converte a lista de dicionários do Python para o formato de texto JSON e escreve no arquivo.
+- ensure_ascii=False mantém os acentos legíveis no arquivo, em vez de transformá-los em códigos como \\u00e3.
+- indent=2 deixa o arquivo identado e fácil de ler caso alguém abra ele manualmente.
+'''
+def salvar_produtos():
+    with open(ARQUIVO_PRODUTOS, "w", encoding="utf-8") as arquivo:
+        json.dump(produtos, arquivo, ensure_ascii=False, indent=2)
+
+'''
+Função carregar_produtos lê o arquivo ARQUIVO_PRODUTOS (se existir) e devolve a lista de produtos salva.
+ 
+- os.path.exists() verifica se o arquivo já foi criado antes; evita erro na primeira vez que o programa roda.
+- "r" abre o arquivo em modo leitura.
+- json.load() faz o caminho contrário do dump: lê o texto JSON do arquivo e devolve uma lista de dicionários do Python.
+- Se o arquivo não existir ainda, devolve uma lista vazia, como se fosse a primeira execução do programa.
+'''
+def carregar_produtos():
+    if os.path.exists(ARQUIVO_PRODUTOS):
+        with open(ARQUIVO_PRODUTOS, "r", encoding="utf-8") as arquivo:
+            return json.load(arquivo)
+    return []
 
 '''
 Função validar_prenchimento recebe o parametro mensagem, que é prenchido pelo usuário.
